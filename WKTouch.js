@@ -122,7 +122,7 @@
             	myTransform += "rotate(" + ((this.rotation + e.rotation) % 360) + "deg)";
         	}
     	}
-    	this.node.style.webkitTransform = myTransform;
+    	this.node.style.webkitTransform = this.node.style.MozTransform = this.node.style.msTransform = this.node.style.OTransform = this.node.style.transform = myTransform;
 	};
         
 	WKTouch.prototype.touchend = function (e) {
