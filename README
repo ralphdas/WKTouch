@@ -1,7 +1,7 @@
 WKTouch
 =======================================
 
-A multi-touch JavaScript plugin for Apple iOS Safari browser, enabling multi-touch drag, scale and rotate on HTML elements.
+A JavaScript plugin for touch–capable devices, enabling multi–touch drag, scale and rotate on HTML elements.
 
 Basic Usage
 ---------------------------------------
