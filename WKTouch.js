@@ -48,6 +48,8 @@
 	};
 
 	WKTouch.prototype.touchstart = function (e) {
+	
+		e.preventDefault();
     
     	//bring item to the front
     	this.node.style.zIndex = WKTouch.zIndexCount++;    
