@@ -30,20 +30,19 @@
 				}
 			}
 		}
+		
+		//detect support for Webkit CSS 3d transforms
+		this.supportsWebkit3dTransform = ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix());
 	}
 
 	//static property to store the zIndex for an element
 	WKTouch.zIndexCount = 1;
 
 	WKTouch.prototype.init = function () {
-	
-		//detect support for Webkit CSS 3d transforms
-		this.supportsWebkit3dTransform = ('WebKitCSSMatrix' in window && 'm11' in new WebKitCSSMatrix());
           
     	this.rotation = 0; //default rotation in degrees
     	this.scale = 1.0; //default scale value
     	this.gesture = false; //flags a 2 touch gesture
-    
     	this.node.addEventListener('touchstart', this, false);
 	};
 
@@ -53,7 +52,6 @@
     
     	//bring item to the front
     	this.node.style.zIndex = WKTouch.zIndexCount++;    
-       
     	this.node.addEventListener('touchmove', this, false);
     	this.node.addEventListener('touchend', this, false);
     	this.node.addEventListener('touchcancel', this, false);
@@ -67,22 +65,29 @@
 
     	e.preventDefault();
     	
-    	var myTransform = "";
+    	var myTransform = "",
+    		x1 = 0,
+        	y1 = 0,
+        	x2 = 0,
+        	y2 = 0,
+        	curX = 0,
+        	curY = 0;
     
     	//drag event
     	if ((e.targetTouches.length === 1) && (this.options.dragable)) {
     
     		//get drag point
-        	var curX = e.targetTouches[0].pageX - (this.node.offsetLeft + (this.node.offsetWidth / 2)),
-        		curY = e.targetTouches[0].pageY - (this.node.offsetTop + (this.node.offsetHeight / 2));
+        	curX = e.targetTouches[0].pageX - (this.node.offsetLeft + (this.node.offsetWidth / 2));
+        	curY = e.targetTouches[0].pageY - (this.node.offsetTop + (this.node.offsetHeight / 2));
         		
         	//translate drag
         	if (this.supportsWebkit3dTransform) {
         		myTransform += 'translate3d(' + curX + 'px,' + curY + 'px, 0)';
-        	}
-        	else {
+        		
+        	} else {
         		myTransform += 'translate(' + curX + 'px,' + curY + 'px)';
         	}
+        	
         	//persist scale and rotate values from previous gesture
         	if (this.options.scalable) {
             	myTransform += "scale(" + (this.scale) + ")";
@@ -98,18 +103,18 @@
         	this.gesture = true;
         	
         	//get middle point between two touches for drag
-        	var x1 = e.targetTouches[0].pageX - (this.node.offsetLeft + (this.node.offsetWidth / 2)),
-        		y1 = e.targetTouches[0].pageY - (this.node.offsetTop + (this.node.offsetHeight / 2)),
-        		x2 = e.targetTouches[1].pageX - (this.node.offsetLeft + (this.node.offsetWidth / 2)),
-        		y2 = e.targetTouches[1].pageY - (this.node.offsetTop + (this.node.offsetHeight / 2)),
-        		curX = (x1 + x2) / 2,
-        		curY = (y1 + y2) / 2;
+        	x1 = e.targetTouches[0].pageX - (this.node.offsetLeft + (this.node.offsetWidth / 2));
+        	y1 = e.targetTouches[0].pageY - (this.node.offsetTop + (this.node.offsetHeight / 2));
+        	x2 = e.targetTouches[1].pageX - (this.node.offsetLeft + (this.node.offsetWidth / 2));
+        	y2 = e.targetTouches[1].pageY - (this.node.offsetTop + (this.node.offsetHeight / 2));
+        	curX = (x1 + x2) / 2,
+        	curY = (y1 + y2) / 2;
         	
         	//translate drag
         	if (this.supportsWebkit3dTransform) {
         		myTransform += 'translate3d(' + curX + 'px,' + curY + 'px, 0)';
-        	}
-        	else {
+        		
+        	} else {
         	    myTransform += 'translate(' + curX + 'px,' + curY + 'px)';
         	}
         	
@@ -135,7 +140,6 @@
 
         //store scale and rotate values on gesture end    
     	if (this.gesture) {
-    	
         	this.scale *= e.scale;
         	this.rotation = (this.rotation + e.rotation) % 360;
         	this.gesture = false;
@@ -156,7 +160,6 @@
     
     	//store scale and rotate values on gesture end 
     	if (this.gesture) {
-    	
         	this.scale *= e.scale;
         	this.rotation = (this.rotation + e.rotation) % 360;
         	this.gesture = false;
